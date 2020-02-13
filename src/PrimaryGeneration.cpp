@@ -14,6 +14,7 @@
 #include <G4PrimaryParticle.hh>
 #include <G4PrimaryVertex.hh>
 #include <G4Event.hh>
+#include <G4Electron.hh>
 
 
 PrimaryGeneration::PrimaryGeneration():
@@ -30,7 +31,8 @@ PrimaryGeneration::~PrimaryGeneration()
 
 void PrimaryGeneration::GeneratePrimaries(G4Event* event)
 {
-  G4ParticleDefinition* pdef = G4IonTable::GetIonTable()->GetIon(10, 20, 0.);
+  //G4ParticleDefinition* pdef = G4IonTable::GetIonTable()->GetIon(10, 20, 0.);
+  G4ParticleDefinition* pdef = G4Electron::Definition();
   if (!pdef)
     G4Exception("SetParticleDefinition()", "[IonGun]",
                 FatalException, " can not create ion ");

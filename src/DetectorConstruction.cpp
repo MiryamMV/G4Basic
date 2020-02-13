@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------------
 
 #include "DetectorConstruction.h"
+#include "TrackingSD.h"
 
 #include <G4Box.hh>
 #include <G4Tubs.hh>
@@ -15,6 +16,7 @@
 #include <G4NistManager.hh>
 #include <G4SystemOfUnits.hh>
 #include <G4VisAttributes.hh>
+#include <G4SDManager.hh>
 
 
 DetectorConstruction::DetectorConstruction(): G4VUserDetectorConstruction()
@@ -61,6 +63,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.),
                     detector_logic_vol, detector_name, world_logic_vol, false, 0, true);
+
+  // SENSITIVE DETECTOR ////////////////////////////////////
+
+  TrackingSD* tracking_sd = new TrackingSD("/G4BASIC/TRACKING", "TrackingHitsCollection");
+  G4SDManager::GetSDMpointer()->AddNewDetector(tracking_sd);
+  SetSensitiveDetector(detector_logic_vol, tracking_sd);
 
   //////////////////////////////////////////////////////////
 
