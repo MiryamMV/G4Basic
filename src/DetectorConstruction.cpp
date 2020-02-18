@@ -6,6 +6,8 @@
 
 #include "DetectorConstruction.h"
 
+#include "TrackingSD.h"
+
 #include <G4Box.hh>
 #include <G4Tubs.hh>
 #include <G4Sphere.hh>
@@ -16,6 +18,8 @@
 #include <G4NistManager.hh>
 #include <G4VisAttributes.hh>
 #include <G4RotationMatrix.hh>
+#include <G4UserLimits.hh>
+#include <G4SDManager.hh>
 
 
 DetectorConstruction::DetectorConstruction(): G4VUserDetectorConstruction()
@@ -50,31 +54,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   world_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
-  // SHIELDING /////////////////////////////////////////////
-
-  G4String shield_name   = "SHIELDING";
-  G4double shield_diam   = 10.*m;
-  G4double shield_height = 10.*m;
-
-  G4Tubs* shield_solid_vol =
-    new G4Tubs(shield_name, 0., shield_diam/2., shield_height/2., 0., 360*deg);
-
-  G4LogicalVolume* shield_logic_vol =
-    new G4LogicalVolume(shield_solid_vol,
-                        G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER"),
-                        shield_name);
-
-  G4RotationMatrix* rotX = new G4RotationMatrix();
-  rotX->rotateX(90*deg);
-
-  new G4PVPlacement(rotX, G4ThreeVector(0.,0.,0.),
-                    shield_logic_vol, shield_name, world_logic_vol,
-                    false, 0, true);
-
   // DETECTOR //////////////////////////////////////////////
 
   G4String detector_name = "DETECTOR";
-  G4double detector_size = 2.*m;
+  G4double detector_size = 10.*m;
 
   G4Box* detector_solid_vol =
     new G4Box(detector_name, detector_size/2., detector_size/2., detector_size/2.);
@@ -83,8 +66,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     new G4LogicalVolume(detector_solid_vol, EnrichedXenon(), detector_name);
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.),
-                    detector_logic_vol, detector_name, shield_logic_vol,
+                    detector_logic_vol, detector_name, world_logic_vol,
                     false, 0, true);
+
+  //////////////////////////////////////////////////////////
+
+  // Step limit and sensitive detector
+
+  G4UserLimits* step_limit = new G4UserLimits(1.*mm);
+  detector_logic_vol->SetUserLimits(step_limit);
+
+  TrackingSD* tsd = new TrackingSD("G4BASIC/TRACKING_SD",
+                                   "TrackingHitsCollection");
+  G4SDManager::GetSDMpointer()->AddNewDetector(tsd);
+  detector_logic_vol->SetSensitiveDetector(tsd);
 
   //////////////////////////////////////////////////////////
 
