@@ -1,10 +1,4 @@
-## ---------------------------------------------------------
-##  G4Basic | CMakeLists.txt
-##
-##  Main CMake build script.
-##   * Author: Justo Martin-Albo
-##   * Creation date: 14 Aug 2019
-## ---------------------------------------------------------
+## G4Basic | CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(G4BASIC)
@@ -25,5 +19,8 @@ include(${Geant4_USE_FILE})
 
 ## Recurse through sub-directories
 add_subdirectory(src)
-add_subdirectory(app)
-add_subdirectory(cfg)
+#add_subdirectory(mac)
+
+add_executable(G4Basic G4Basic.cpp $<TARGET_OBJECTS:G4BASIC_SRC>)
+target_include_directories(G4Basic PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_link_libraries(G4Basic ${Geant4_LIBRARIES})

@@ -1,9 +1,7 @@
 // -----------------------------------------------------------------------------
-//  G4Basic | SteppingAction.H
+//  G4Basic | SteppingAction.h
 //
-//  Definition of detector geometry and materials.
-//   * Author: Justo Martin-Albo
-//   * Creation date: 14 Aug 2019
+//  User stepping action class.
 // -----------------------------------------------------------------------------
 
 #ifndef STEPPING_ACTION_H
@@ -11,13 +9,18 @@
 
 #include <G4UserSteppingAction.hh>
 
+class G4Step;
+
 
 class SteppingAction: public G4UserSteppingAction
 {
-  public:
-    SteppingAction();
-    virtual ~SteppingAction();
-    virtual void UserSteppingAction(const G4Step*);
+public:
+  SteppingAction();
+  virtual ~SteppingAction();
+  virtual void UserSteppingAction(const G4Step*);
 };
+
+inline SteppingAction::SteppingAction() {}
+inline SteppingAction::~SteppingAction() {}
 
 #endif

@@ -1,29 +1,23 @@
 // -----------------------------------------------------------------------------
-//  G4Basic | RunAction.h
+//  G4Basic | RunAction.cpp
 //
-//
-//   * Author: Justo Martin-Albo
-//   * Creation date: 15 Aug 2019
+//  User run action class.
 // -----------------------------------------------------------------------------
 
 #include "RunAction.h"
 
+#include <G4Run.hh>
 
-RunAction::RunAction(): G4UserRunAction()
+
+void RunAction::BeginOfRunAction(const G4Run* run)
 {
+  G4cout << "------------------------------------------------------------\n"
+         << "Run ID " << run->GetRunID() << G4endl;
 }
-
-
-RunAction::~RunAction()
-{
-}
-
-
-void RunAction::BeginOfRunAction(const G4Run*)
-{
-}
-
 
 void RunAction::EndOfRunAction(const G4Run*)
 {
+  G4cout << "End of run."
+         << "------------------------------------------------------------"
+         << G4endl;
 }
