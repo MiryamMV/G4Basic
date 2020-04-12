@@ -6,36 +6,41 @@
 
 #include "DetectorConstruction.h"
 
-#include "TrackingSD.h"
-
-#include <G4Box.hh>
-#include <G4Tubs.hh>
 #include <G4Sphere.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4SystemOfUnits.hh>
 #include <G4PhysicalConstants.hh>
 #include <G4NistManager.hh>
-#include <G4VisAttributes.hh>
-#include <G4RotationMatrix.hh>
 #include <G4UserLimits.hh>
-#include <G4SDManager.hh>
+#include <G4GenericMessenger.hh>
+#include <G4VPhysicalVolume.hh>
 
 
-DetectorConstruction::DetectorConstruction(): G4VUserDetectorConstruction()
+DetectorConstruction::DetectorConstruction():
+  G4VUserDetectorConstruction(),
+  msg_(nullptr),
+  world_phys_vol_(nullptr)
 {
+  msg_ = new G4GenericMessenger(this, "/geometry/", "");
+
+  auto& max_step_length_cmd =
+    msg_->DeclareMethodWithUnit("max_step_length", "mm",
+                                &DetectorConstruction::SetMaxStepLength,
+                                "Set maximum allowed step length.");
+  max_step_length_cmd.SetParameterName("max_step_length", false);
+  max_step_length_cmd.SetRange("max_step_length>0.");
 }
 
 
 DetectorConstruction::~DetectorConstruction()
 {
+  delete msg_;
 }
 
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
-  // WORLD /////////////////////////////////////////////////
-
   G4String world_name = "WORLD";
   G4double world_size = 25.*m;
 
@@ -43,47 +48,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     new G4Sphere(world_name, 0., world_size/2., 0., 360.*deg, 0., 180.*deg);
 
   G4LogicalVolume* world_logic_vol =
-    new G4LogicalVolume(world_solid_vol,
-                        G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),
-                        world_name);
+    new G4LogicalVolume(world_solid_vol, EnrichedXenon(), world_name);
 
-  G4VPhysicalVolume* world_phys_vol =
-    new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.),
-                      world_logic_vol, world_name, nullptr,
-                      false, 0, true);
+  world_phys_vol_ = new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.),
+                                      world_logic_vol, world_name, nullptr,
+                                      false, 0, true);
 
-  world_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  return world_phys_vol_;
+}
 
-  // DETECTOR //////////////////////////////////////////////
 
-  G4String detector_name = "DETECTOR";
-  G4double detector_size = 10.*m;
-
-  G4Box* detector_solid_vol =
-    new G4Box(detector_name, detector_size/2., detector_size/2., detector_size/2.);
-
-  G4LogicalVolume* detector_logic_vol =
-    new G4LogicalVolume(detector_solid_vol, EnrichedXenon(), detector_name);
-
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,0.),
-                    detector_logic_vol, detector_name, world_logic_vol,
-                    false, 0, true);
-
-  //////////////////////////////////////////////////////////
-
-  // Step limit and sensitive detector
-
-  G4UserLimits* step_limit = new G4UserLimits(1.*mm);
-  detector_logic_vol->SetUserLimits(step_limit);
-
-  TrackingSD* tsd = new TrackingSD("G4BASIC/TRACKING_SD",
-                                   "TrackingHitsCollection");
-  G4SDManager::GetSDMpointer()->AddNewDetector(tsd);
-  detector_logic_vol->SetSensitiveDetector(tsd);
-
-  //////////////////////////////////////////////////////////
-
-  return world_phys_vol;
+void DetectorConstruction::SetMaxStepLength(double msl)
+{
+  world_phys_vol_->GetLogicalVolume()->SetUserLimits(new G4UserLimits(msl));
 }
 
 
