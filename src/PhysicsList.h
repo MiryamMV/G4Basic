@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 //  G4Basic | PhysicsList.h
 //
-//  
+//
 // -----------------------------------------------------------------------------
 
 #ifndef PHYSICS_LIST_H
@@ -14,8 +14,8 @@ class PhysicsList: public G4VModularPhysicsList
 {
 public:
   PhysicsList();
-  virtual ~PhysicsList();
-  virtual void SetCuts();
+  ~PhysicsList() override;
+  void SetCuts() override;
 };
 
 #endif
