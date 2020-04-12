@@ -17,8 +17,8 @@ class PrimaryGeneration: public G4VUserPrimaryGeneratorAction
 {
 public:
   PrimaryGeneration();
-  virtual ~PrimaryGeneration();
-  virtual void GeneratePrimaries(G4Event*);
+  ~PrimaryGeneration() override;
+  void GeneratePrimaries(G4Event*) override;
 
 private:
   G4ParticleDefinition* particle_def_;

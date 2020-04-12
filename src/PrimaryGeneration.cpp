@@ -34,7 +34,9 @@ void PrimaryGeneration::GeneratePrimaries(G4Event* event)
   particle->SetMomentumDirection(G4RandomDirection());
   particle->SetKineticEnergy(kinetic_energy_);
 
-  G4PrimaryVertex* vertex = new G4PrimaryVertex(G4ThreeVector(0.,0.,0.), 0.);
+  G4double initial_time = 0.;
+  G4ThreeVector initial_position(0.,0.,0.);
+  G4PrimaryVertex* vertex = new G4PrimaryVertex(initial_position, initial_time);
   vertex->SetPrimary(particle);
 
   event->AddPrimaryVertex(vertex);
