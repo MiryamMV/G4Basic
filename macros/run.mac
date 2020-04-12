@@ -1,2 +1,4 @@
-/tracking/verbose 1
-/run/beamOn 1
+/tracking/verbose 0
+#/process/msc/RangeFactor 0.005
+/geometry/max_step_length 1.0 mm
+/run/beamOn 100
