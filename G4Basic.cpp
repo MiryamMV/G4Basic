@@ -21,12 +21,19 @@
 
 int main(int argc, char const *argv[])
 {
+  // Open output file in truncation mode
+  std::ofstream ofile("data.csv", std::ofstream::trunc);
+
   // Construct the run manager and set the initialization classes next
   G4RunManager* runmgr = new G4RunManager();
   runmgr->SetUserInitialization(new PhysicsList());
   runmgr->SetUserInitialization(new DetectorConstruction());
   runmgr->SetUserAction(new PrimaryGeneration());
-  runmgr->SetUserAction(new RunAction());
+
+  runmgr->SetUserAction(new RunAction(ofile));
+  runmgr->SetUserAction(new TrackingAction(ofile));
+  runmgr->SetUserAction(new SteppingAction(ofile));
+
   runmgr->Initialize();
 
   // If no macro file was provided via command line,
@@ -52,6 +59,7 @@ int main(int argc, char const *argv[])
   // Free the store: user actions, physics_list and detector_description are
   // owned and deleted by the run manager, so they should not be deleted
   // in the main() program.
+  ofile.close();
   delete runmgr;
 
   return EXIT_SUCCESS;
