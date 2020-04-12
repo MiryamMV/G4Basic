@@ -8,6 +8,7 @@
 #define STEPPING_ACTION_H
 
 #include <G4UserSteppingAction.hh>
+#include <fstream>
 
 class G4Step;
 
@@ -15,12 +16,11 @@ class G4Step;
 class SteppingAction: public G4UserSteppingAction
 {
 public:
-  SteppingAction();
-  virtual ~SteppingAction();
-  virtual void UserSteppingAction(const G4Step*);
+  SteppingAction(std::ofstream&);
+  ~SteppingAction() override;
+  void UserSteppingAction(const G4Step*) override;
+private:
+  std::ofstream& ofile_;
 };
-
-inline SteppingAction::SteppingAction() {}
-inline SteppingAction::~SteppingAction() {}
 
 #endif
