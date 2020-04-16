@@ -22,7 +22,7 @@ DetectorConstruction::DetectorConstruction():
   msg_(nullptr),
   world_phys_vol_(nullptr)
 {
-  msg_ = new G4GenericMessenger(this, "/geometry/", "");
+  msg_ = new G4GenericMessenger(this, "/G4Basic/", "");
 
   auto& max_step_length_cmd =
     msg_->DeclareMethodWithUnit("max_step_length", "mm",
@@ -67,9 +67,9 @@ void DetectorConstruction::SetMaxStepLength(double msl)
 G4Material* DetectorConstruction::EnrichedXenon() const
 {
   G4String name = "ENRICHED_XENON";
-  G4double pressure    = 15.0 * bar;
-  G4double temperature = STP_Temperature; // 273.15 K
-  G4double density     = 97.49 * kg/m3;
+  G4double pressure    =  10.0 * bar;
+  G4double temperature = 300.0 * kelvin;
+  G4double density     =  55.6 * kg/m3;
 
   G4Material* material =
     new G4Material(name, density, 1, kStateGas, temperature, pressure);
