@@ -1,4 +1,11 @@
+/G4Basic/kinetic_energy 2500. keV
+
+/G4Basic/max_step_length 1. mm
+
+/process/msc/RangeFactor 0.001
+
+/run/particle/dumpCutValues true
+
 /tracking/verbose 0
-#/process/msc/RangeFactor 0.005
-/geometry/max_step_length 1.0 mm
-/run/beamOn 100
+
+/run/beamOn 10000
