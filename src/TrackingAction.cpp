@@ -39,21 +39,27 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
          << track->GetVertexPosition().y() / mm << ","
          << track->GetVertexPosition().z() / mm << ",";
 
-  // Momentum direction
-  ofile_ << std::setprecision(3) << std::fixed
-         << track->GetMomentumDirection().x() << ","
-         << track->GetMomentumDirection().y() << ","
-         << track->GetMomentumDirection().z() << ",";
+  // Cosine theta
+  ofile_ << std::setprecision(3) << std::fixed << "0.000,";
+
+  // // Momentum direction
+  // ofile_ << std::setprecision(3) << std::fixed
+  //        << track->GetMomentumDirection().x() << ","
+  //        << track->GetMomentumDirection().y() << ","
+  //        << track->GetMomentumDirection().z() << ",";
 
   // Step length
-  ofile_ << std::setprecision(3) << std::fixed
-         << "0.000, ";
+  ofile_ << std::setprecision(3) << std::fixed << "0.000,";
+
+  // Track length
+  ofile_ << std::setprecision(3) << std::fixed << "0.000,";
 
   // Kinetic energy and deposited energy
   ofile_ << std::setprecision(3) << std::fixed
          << track->GetKineticEnergy() / keV << ","
          << "0.000"
          << std::endl;
+
 }
 
 

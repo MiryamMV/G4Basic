@@ -21,7 +21,7 @@ RunAction::~RunAction()
 }
 
 
-void RunAction::BeginOfRunAction(const G4Run*)
+void RunAction::BeginOfRunAction(const G4Run* run)
 {
   G4cout << "------------------------------------------------------------\n"
          << "Run ID " << run->GetRunID() << G4endl;
@@ -30,8 +30,10 @@ void RunAction::BeginOfRunAction(const G4Run*)
   ofile_ << "event_number,"
          << "step_number,"
          << "X," << "Y," << "Z,"
-         << "UX," << "UY," << "UZ,"
+         // << "UX," << "UY," << "UZ,"
+         << "angle,"
          << "step_length,"
+         << "track_length,"
          << "E_kin,"
          << "E_dep"
          << std::endl;

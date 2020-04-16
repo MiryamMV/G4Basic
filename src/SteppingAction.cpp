@@ -38,18 +38,30 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
          << step->GetPostStepPoint()->GetPosition().y() / mm << ","
          << step->GetPostStepPoint()->GetPosition().z() / mm << ",";
 
-  // Momentum direction
-  ofile_ << std::setprecision(3) << std::fixed
-         << step->GetPostStepPoint()->GetMomentumDirection().x() / mm << ","
-         << step->GetPostStepPoint()->GetMomentumDirection().y() / mm << ","
-         << step->GetPostStepPoint()->GetMomentumDirection().z() / mm << ",";
+  // Cosine theta
+  G4ThreeVector u0 = step->GetTrack()->GetVertexMomentumDirection();
+  G4ThreeVector u  = step->GetTrack()->GetMomentumDirection();
+  G4double angle = u.angle(u0);
+
+  ofile_ << std::setprecision(3) << std::fixed << angle / deg << ",";
+
+  // // Momentum direction
+  // ofile_ << std::setprecision(3) << std::fixed
+  //        << step->GetPostStepPoint()->GetMomentumDirection().x() / mm << ","
+  //        << step->GetPostStepPoint()->GetMomentumDirection().y() / mm << ","
+  //        << step->GetPostStepPoint()->GetMomentumDirection().z() / mm << ",";
 
   // Step length
   ofile_ << std::setprecision(3) << std::fixed
          << step->GetStepLength() / mm << ",";
 
+  // Track length
+  ofile_ << std::setprecision(3) << std::fixed
+         << step->GetTrack()->GetTrackLength() / mm << ",";
+
   // Kinetic energy and energy deposit
   ofile_ << std::setprecision(3) << std::fixed
          << step->GetTrack()->GetKineticEnergy() / keV << ","
-         << step->GetTotalEnergyDeposit() / keV << std::endl;
+         << step->GetTotalEnergyDeposit() / keV
+         << std::endl;
 }
