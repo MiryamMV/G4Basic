@@ -10,6 +10,7 @@
 #include <G4VUserPrimaryGeneratorAction.hh>
 #include <globals.hh>
 
+class G4GenericMessenger;
 class G4ParticleDefinition;
 
 
@@ -21,6 +22,7 @@ public:
   void GeneratePrimaries(G4Event*) override;
 
 private:
+  G4GenericMessenger* msg_;
   G4ParticleDefinition* particle_def_;
   G4double kinetic_energy_;
 };

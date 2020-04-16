@@ -6,6 +6,7 @@
 
 #include "PrimaryGeneration.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4Electron.hh>
 #include <G4ParticleDefinition.hh>
 #include <G4SystemOfUnits.hh>
@@ -17,14 +18,23 @@
 
 PrimaryGeneration::PrimaryGeneration():
   G4VUserPrimaryGeneratorAction(),
+  msg_(nullptr),
   particle_def_(G4Electron::Definition()),
-  kinetic_energy_(2.5*MeV)
+  kinetic_energy_(0.)
 {
+  msg_ = new G4GenericMessenger(this, "/G4Basic/", "");
+
+  auto& kinetic_energy_cmd =
+    msg_->DeclarePropertyWithUnit("kinetic_energy", "keV", kinetic_energy_,
+                                  "Kinetic energy of primary electron.");
+  kinetic_energy_cmd.SetParameterName("kinetic_energy", false);
+  kinetic_energy_cmd.SetRange("kinetic_energy>0.");
 }
 
 
 PrimaryGeneration::~PrimaryGeneration()
 {
+  delete msg_;
 }
 
 
