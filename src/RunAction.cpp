@@ -28,9 +28,10 @@ void RunAction::BeginOfRunAction(const G4Run* run)
 
   // Write CSV file header
   ofile_ << "event_number,"
+         << "track_id,"
          << "step_number,"
-         << "X," << "Y," << "Z,"
-         // << "UX," << "UY," << "UZ,"
+         << "x,"  << "y,"  << "z,"
+         << "ux," << "uy," << "uz,"
          << "angle,"
          << "step_length,"
          << "track_length,"
